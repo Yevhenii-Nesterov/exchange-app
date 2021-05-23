@@ -1,9 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import logo from '../assets/logo.svg';
+import { Counter } from '../components/counter/Counter';
+import './rates/rates.scss';
 
-function App() {
+function Rates() {
   return (
     <div className="App">
       <header className="App-header">
@@ -55,4 +55,4 @@ function App() {
   );
 }
 
-export default App;
+export default Rates;

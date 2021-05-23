@@ -1,15 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import { store } from './app/store';
+import store, {history} from './store/';
 import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router'
+import {Route, Switch, Redirect} from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
+
+import './index.scss';
+
+import RatesPage from './pages/Rates'
+import ExchangePage from './pages/Rates'
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <ConnectedRouter history={history}>
+        <Switch>
+          <Route path="/rates" component={RatesPage}/>
+          <Route path="/exchange" component={ExchangePage}/>
+
+          <Redirect to="/rates"/>
+        </Switch>
+      </ConnectedRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
