@@ -1,0 +1,136 @@
+.widget {
+  color: white;
+  max-width: 400px;
+  background: linear-gradient(to right, rgba(122, 188, 255, 1) 0%, rgba(96, 171, 248, 1) 44%, rgba(64, 150, 238, 1) 100%);
+}
+
+.leftCol {
+  flex: 1.5;
+}
+
+.rightCol {
+  flex: 1;
+  padding-top: 12px;
+}
+
+
+.amountInputWrap {
+  display: flex;
+  align-items: center;
+
+  input {
+    color: inherit;
+    background: transparent;
+    border: none;
+    max-width: 3em;
+    font-size: 2em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .sign {
+    font-size: 1.5em;
+    opacity: 0;
+
+    &.hasValue {
+      opacity: 1;
+    }
+  }
+}
+
+.balanceField, .rateField {
+  font-size: 0.6em;
+  opacity: 0.9;
+  padding-top: 10px;
+  margin-left: 12px;
+}
+
+.rateField {
+  margin-top: 15px;
+}
+
+.currencySection {
+  display: flex;
+  padding: 20px;
+  justify-content: space-between;
+
+  &.from {
+    position: relative;
+    background: linear-gradient(to right, rgba(122, 188, 255, 1) 0%, rgba(96, 171, 248, 1) 50%, rgba(64, 150, 238, 1) 100%);
+  }
+
+  &.from::after {
+    content: '';
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid rgba(96, 171, 248, 1);
+    position: absolute;
+    bottom: -12px;
+    left: 0;
+    right: 6px;
+    width: 0;
+    height: 0;
+    margin: auto;
+  }
+
+  &.to {
+    background: linear-gradient(to right, rgba(50, 140, 220, 1) 0%, rgba(65, 160, 240, 1) 100%);
+  }
+}
+
+.currencySelector {
+  width: 3em;
+
+  .currencyItem {
+    cursor: pointer;
+    padding: 0.1em 0.5em;
+    opacity: 0.8;
+
+    &.selected {
+      border: 1px solid white;
+      border-radius: 2px;
+      opacity: 1;
+    }
+
+    &.inactive {
+      color: #cad7dc;
+
+    }
+
+    &.inactive, &.selected {
+      cursor: initial;
+    }
+
+    &:not(.inactive):not(.selected):hover {
+      opacity: 1;
+    }
+  }
+}
+
+.buttonsRow {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row-reverse;
+  padding: 8px 20px;
+  justify-content: space-between;
+  align-items: center;
+
+  button {
+    cursor: pointer;
+    width: 90px;
+    padding: 2px 5px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    color: white;
+    font-size: 1em;
+  }
+
+  button:hover {
+    border: 1px solid rgba(255, 255, 255, 0.9);
+  }
+
+  .operationError {
+    color: deeppink;
+    font-size: 1em;
+  }
+}

@@ -1,9 +1,3 @@
-/**
- * @author Yevhenii Nesterov <yevhenii.nesterov@gmail.com>
- */
-
-const state = {
-
-}
+const state = {}
 
 export default state

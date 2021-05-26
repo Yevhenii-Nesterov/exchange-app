@@ -1,1 +1,1 @@
-# Revolut Currency exchange home task
+# Currency exchange app
