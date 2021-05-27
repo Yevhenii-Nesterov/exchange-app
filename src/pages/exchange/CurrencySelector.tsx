@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 import styles from './exchange.module.scss';
 
-import cx from 'classnames'
+import cx from 'classnames';
 import {currencyCode} from "../../models/BankAccount";
 
 export interface CurrencySelectorProps {
@@ -9,6 +9,7 @@ export interface CurrencySelectorProps {
   selected: currencyCode;
   unavailable: currencyCode[];
   codes: currencyCode[];
+  'data-testid'?: string;
 }
 
 export function CurrencySelector(props: CurrencySelectorProps) {
@@ -19,17 +20,18 @@ export function CurrencySelector(props: CurrencySelectorProps) {
     const selectedItem = selected === code;
     return (
       <div key={code}
+           data-code={code}
            className={cx(styles.currencyItem, {[styles.inactive]: inactive, [styles.selected]: selectedItem})}
            onClick={() => !inactive && onSelect(code)}
       >
         {code.toUpperCase()}
       </div>
-    )
+    );
   });
 
   return (
-    <div className={styles.currencySelector }>
+    <div className={styles.currencySelector} data-testid={props['data-testid']}>
       {items}
     </div>
-  )
+  );
 }

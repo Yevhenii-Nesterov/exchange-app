@@ -1,17 +1,18 @@
-import React, {ChangeEvent} from 'react'
+import React, {ChangeEvent} from 'react';
 import styles from './exchange.module.scss';
 
-import cx from 'classnames'
+import cx from 'classnames';
 
 export interface CurrencySelectorProps {
   amount: string;
   onAmountChange: (amount: string) => void;
   sign: string;
+  'data-testid'?: string;
 }
 
-const valueMatcher = /^\d+(\.\d{0,2})?$/
+const valueMatcher = /^\d+(\.\d{0,2})?$/;
 
-const trimNumber = (num: string) => Number(num).toString()
+const trimNumber = (num: string) => Number(num).toString();
 
 export function AmountInput(props: CurrencySelectorProps) {
   const {amount, onAmountChange, sign} = props;
@@ -28,18 +29,20 @@ export function AmountInput(props: CurrencySelectorProps) {
     }
 
     const dotAtTheEnd = value.endsWith('.');
-    const [whole, fractional] = value.split('.')
+    const [whole, fractional] = value.split('.');
 
     onAmountChange(trimNumber(whole) + (dotAtTheEnd ? '.' : (fractional ? '.' + fractional : '')));
-  }
+  };
 
   const hasValue = amount !== '' && Number(amount) > 0;
 
   return (
     <div className={styles.amountInputWrap}>
       <span className={cx(styles.sign, {[styles.hasValue]: hasValue})}>{sign}</span><input type="numeric"
-                                                                                  value={amount}
-                                                                                  onChange={onChange}/>
+                                                                                           value={amount}
+                                                                                           title="Currency input"
+                                                                                           data-testid={props['data-testid']}
+                                                                                           onChange={onChange}/>
     </div>
-  )
+  );
 }

@@ -1,7 +1,6 @@
 import React, {PureComponent} from 'react';
 import PropTypes from "prop-types";
-import connector, {PropsFromState} from './exchange/exchange-store-connector'
-import {setInterval} from "timers";
+import connector, {PropsFromState} from './exchange/exchange-store-connector';
 import {currencyCode} from "../models/BankAccount";
 
 import styles from './exchange/exchange.module.scss';
@@ -15,7 +14,7 @@ interface ExchangeProps extends PropsFromState {
 }
 
 interface ExchangeState {
-  timer: null | NodeJS.Timeout;
+  timer: null | number;
   fromCurrency: currencyCode;
   toCurrency: currencyCode;
   fromAmount: string;
@@ -23,10 +22,10 @@ interface ExchangeState {
   lastValueSource: 'fromAmount' | 'toAmount'
 }
 
-class Exchange extends PureComponent<ExchangeProps, ExchangeState> {
+export class Exchange extends PureComponent<ExchangeProps, ExchangeState> {
   static propTypes = {
     ratesUpdateIntervalSec: PropTypes.number.isRequired
-  }
+  };
 
   constructor(props: ExchangeProps) {
     super(props);
@@ -44,52 +43,52 @@ class Exchange extends PureComponent<ExchangeProps, ExchangeState> {
   componentDidMount() {
     this.props.loadRates();
     this.props.loadBalances();
-    const timer = setInterval(() => this.props.loadRates(), this.props.ratesUpdateIntervalSec * 1000)
+    const timer = window.setInterval(() => this.props.loadRates(), this.props.ratesUpdateIntervalSec * 1000);
     this.setState({timer});
   }
 
   componentWillUnmount() {
     if (this.state.timer !== null) {
-      clearInterval(this.state.timer)
+      clearInterval(this.state.timer);
     }
   }
 
   onAmountChange = (value: string, type: 'fromAmount' | 'toAmount') => {
-    const rate = this.props.rates ? getExchangeRate(this.props.rates.rates!, this.state.fromCurrency, this.state.toCurrency) : 0
+    const rate = this.props.rates ? getExchangeRate(this.props.rates.rates!, this.state.fromCurrency, this.state.toCurrency) : 0;
 
     if (type === 'fromAmount') {
       const toAmount = value !== '' ? (Number(value) * rate).toFixed(2) : '';
-      this.setState( {fromAmount: value, toAmount});
+      this.setState({fromAmount: value, toAmount});
     } else {
       const fromAmount = value !== '' ? (Number(value) / rate).toFixed(2) : '';
       this.setState({toAmount: value, fromAmount});
     }
-  }
+  };
 
   onCurrencyChange = (currency: currencyCode, type: 'fromCurrency' | 'toCurrency') => {
     // trigger field value recalculation for opposite side
     const {lastValueSource} = this.state;
     this.setState({[type]: currency} as unknown as ExchangeState, () => {
       this.onAmountChange(this.state[lastValueSource], lastValueSource);
-    })
-  }
+    });
+  };
 
-  BalanceField = (props: {account: string}) => {
-    const {account} = props;
+  BalanceField = (props: { account: string, 'data-testid'?: string }) => {
+    const {account, 'data-testid': testId} = props;
     const {balances} = this.props;
-    let content = ''
+    let content = '';
     if (balances.loading) {
-      content = 'Loading balance...'
+      content = 'Loading balance...';
     } else {
       const amount = balances.balances?.[account];
       if (amount !== undefined) {
-        content = `You have ${getCurrencySign(account)}${amount.toFixed(2)}`
+        content = `You have ${getCurrencySign(account)}${amount.toFixed(2)}`;
       }
     }
-    return (<div className={styles.balanceField}>
+    return (<div className={styles.balanceField} data-testid={testId}>
       {content}
-    </div>)
-  }
+    </div>);
+  };
 
   ExchangeRateField = () => {
     const {fromCurrency, toCurrency} = this.state;
@@ -101,15 +100,15 @@ class Exchange extends PureComponent<ExchangeProps, ExchangeState> {
 
     if (rates.rates && !rates.error) {
       const rate = getExchangeRate(rates.rates!, this.state.fromCurrency, this.state.toCurrency);
-      content = `${fromSign}1 = ${toSign}${rate.toFixed(5)}`
+      content = `${fromSign}1 = ${toSign}${rate.toFixed(5)}`;
     }
 
     return (
-      <div className={styles.rateField}>
+      <div className={styles.rateField} data-testid="exchange-rate">
         {content}
       </div>
-    )
-  }
+    );
+  };
 
   FromSection = () => {
     const {BalanceField} = this;
@@ -121,26 +120,28 @@ class Exchange extends PureComponent<ExchangeProps, ExchangeState> {
         <div className={styles.leftCol}>
 
           <CurrencySelector
+            data-testid="currency-from"
             selected={fromCurrency}
             codes={Object.keys(balances.balances) as currencyCode[]}
             unavailable={[toCurrency]}
             onSelect={(code) => this.onCurrencyChange(code, "fromCurrency")}
           />
 
-          <BalanceField account={fromCurrency}/>
+          <BalanceField data-testid="balance-from" account={fromCurrency}/>
         </div>
 
         <div className={styles.rightCol}>
           <AmountInput
+            data-testid="amount-from"
             amount={this.state.fromAmount}
-            onAmountChange={(value) => this.onAmountChange(value,  'fromAmount')}
+            onAmountChange={(value) => this.onAmountChange(value, 'fromAmount')}
             sign="-"
           />
         </div>
 
       </section>
-    )
-  }
+    );
+  };
 
   ToSection = () => {
     const {ExchangeRateField, BalanceField} = this;
@@ -151,28 +152,30 @@ class Exchange extends PureComponent<ExchangeProps, ExchangeState> {
         <div className={styles.leftCol}>
 
           <CurrencySelector
+            data-testid="currency-to"
             selected={toCurrency}
             codes={Object.keys(balances.balances) as currencyCode[]}
             unavailable={[fromCurrency]}
             onSelect={(code) => this.onCurrencyChange(code, "toCurrency")}
           />
 
-          <BalanceField account={toCurrency}/>
+          <BalanceField data-testid="balance-to" account={toCurrency}/>
         </div>
 
         <div className={styles.rightCol}>
           <AmountInput
+            data-testid="amount-to"
             amount={this.state.toAmount}
-            onAmountChange={(value) => this.onAmountChange(value,  'toAmount')}
+            onAmountChange={(value) => this.onAmountChange(value, 'toAmount')}
             sign="+"
           />
-          <ExchangeRateField/>
+          <ExchangeRateField data-testid="exchange-rate"/>
         </div>
 
 
       </section>
-    )
-  }
+    );
+  };
 
   exchangeClick = () => {
     const {balances} = this.props;
@@ -185,8 +188,8 @@ class Exchange extends PureComponent<ExchangeProps, ExchangeState> {
       fromCurrency,
       toCurrency,
       amountInFromCurrency: Number(fromAmount)
-    })
-  }
+    });
+  };
 
   render() {
     const {FromSection, ToSection} = this;
@@ -199,13 +202,12 @@ class Exchange extends PureComponent<ExchangeProps, ExchangeState> {
         <ToSection/>
 
         <div className={styles.buttonsRow}>
-          <button onClick={this.exchangeClick}>Exchange</button>
+          <button data-testid="exchange-btn" onClick={this.exchangeClick}>Exchange</button>
           <div className={styles.operationError}>{error ?? ''}</div>
         </div>
       </div>
-    )
+    );
   }
 }
-
 
 export default connector(Exchange);

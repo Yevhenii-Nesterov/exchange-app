@@ -31,21 +31,21 @@ const balances: AccountBalance[] = [
     balance: 89.00,
     currency: "USD"
   }
-]
+];
 
 export class BankAccount {
 
   static async makeTransfer(transfer: AccountTransfer): Promise<TransferResult> {
     const {amountInFromCurrency, fromCurrency, toCurrency, exchangeRate} = transfer;
-    const fromBalanceId = balances.findIndex(v => v.currency === fromCurrency)
-    const toBalanceId = balances.findIndex(v => v.currency === toCurrency)
+    const fromBalanceId = balances.findIndex(v => v.currency === fromCurrency);
+    const toBalanceId = balances.findIndex(v => v.currency === toCurrency);
 
     if (amountInFromCurrency <= 0) {
       return {
         transfer,
         balancesEffected: [],
         error: 'Invalid amount'
-      }
+      };
     }
 
     if (fromBalanceId === -1 || toBalanceId === -1) {
@@ -53,7 +53,7 @@ export class BankAccount {
         transfer,
         balancesEffected: [],
         error: 'Account not found'
-      }
+      };
     }
 
     if (balances[fromBalanceId].balance < amountInFromCurrency) {
@@ -61,7 +61,7 @@ export class BankAccount {
         transfer,
         balancesEffected: [],
         error: 'Insufficient balance'
-      }
+      };
     }
 
     balances[fromBalanceId].balance -= amountInFromCurrency;
@@ -71,7 +71,7 @@ export class BankAccount {
       transfer,
       balancesEffected: [balances[fromBalanceId], balances[toBalanceId]],
       error: null
-    }
+    };
   }
 
   static async getBalances(): Promise<AccountBalance[]> {

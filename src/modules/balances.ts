@@ -54,45 +54,45 @@ const balancesReducer = createReducer(initialState, {
   [TRANSFER_ERROR]: (state, action: ErrorAction) => {
     state.error = action.payload;
   }
-})
+});
 
 function loadBalances(): AppThunk {
   return async (dispatch, getState) => {
-    dispatch({type: LOADING, payload: true} as LoadingAction)
+    dispatch({type: LOADING, payload: true} as LoadingAction);
     try {
-      const balances = await BankAccount.getBalances()
+      const balances = await BankAccount.getBalances();
       dispatch({
         type: BALANCE_LOAD_SUCCESS, payload: [...balances]
-      } as BalancesLoadSuccessAction)
+      } as BalancesLoadSuccessAction);
     } catch (e) {
-      dispatch({type: BALANCE_LOAD_ERROR, payload: e.message} as ErrorAction)
+      dispatch({type: BALANCE_LOAD_ERROR, payload: e.message} as ErrorAction);
     }
-    dispatch({type: LOADING, payload: false} as LoadingAction)
-  }
+    dispatch({type: LOADING, payload: false} as LoadingAction);
+  };
 }
 
 function makeTransfer(transfer: Omit<AccountTransfer, 'exchangeRate'>): AppThunk {
   return async (dispatch, getState) => {
-    dispatch({type: LOADING, payload: true} as LoadingAction)
+    dispatch({type: LOADING, payload: true} as LoadingAction);
     try {
       const rates = getState().rates.rates;
       if (!rates) {
-        throw Error('Rates are not available')
+        throw Error('Rates are not available');
       }
-      const exchangeRate = getExchangeRate(rates, transfer.fromCurrency, transfer.toCurrency)
-      const result = await BankAccount.makeTransfer({...transfer, exchangeRate})
+      const exchangeRate = getExchangeRate(rates, transfer.fromCurrency, transfer.toCurrency);
+      const result = await BankAccount.makeTransfer({...transfer, exchangeRate});
       if (result.error) {
-        throw Error(result.error)
+        throw Error(result.error);
       }
       dispatch({
         type: TRANSFER_SUCCESS, payload: result
-      } as TransferSuccessAction)
+      } as TransferSuccessAction);
     } catch (e) {
-      dispatch({type: TRANSFER_ERROR, payload: e.message} as ErrorAction)
+      dispatch({type: TRANSFER_ERROR, payload: e.message} as ErrorAction);
     }
-    dispatch({type: LOADING, payload: false} as LoadingAction)
-  }
+    dispatch({type: LOADING, payload: false} as LoadingAction);
+  };
 }
 
-export default balancesReducer
-export {loadBalances, makeTransfer}
+export default balancesReducer;
+export {loadBalances, makeTransfer};

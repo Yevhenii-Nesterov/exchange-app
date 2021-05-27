@@ -35,27 +35,27 @@ const ratesReducer = createReducer(initialState, {
   [RATES_LOAD_ERROR]: (state, action: ErrorAction) => {
     state.error = action.payload;
   }
-})
+});
 
 function loadRates(): AppThunk {
   return async (dispatch, getState) => {
-    dispatch({type: LOADING, payload: true} as LoadingAction)
+    dispatch({type: LOADING, payload: true} as LoadingAction);
     try {
-      const ratesPromise = CurrencyRatesProvider.getRates()
-      const currenciesPromise = CurrencyRatesProvider.getCurrencies()
-      const [rates, currencies] = await Promise.all([ratesPromise, currenciesPromise])
+      const ratesPromise = CurrencyRatesProvider.getRates();
+      const currenciesPromise = CurrencyRatesProvider.getCurrencies();
+      const [rates, currencies] = await Promise.all([ratesPromise, currenciesPromise]);
       dispatch({
         type: RATES_LOAD_SUCCESS, payload: {
           rates,
           currencies
         }
-      } as SuccessAction)
+      } as SuccessAction);
     } catch (e) {
-      dispatch({type: RATES_LOAD_ERROR, payload: e.message} as ErrorAction)
+      dispatch({type: RATES_LOAD_ERROR, payload: e.message} as ErrorAction);
     }
-    dispatch({type: LOADING, payload: false} as LoadingAction)
-  }
+    dispatch({type: LOADING, payload: false} as LoadingAction);
+  };
 }
 
-export default ratesReducer
-export {loadRates}
+export default ratesReducer;
+export {loadRates};

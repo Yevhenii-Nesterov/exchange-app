@@ -192,7 +192,7 @@ const stubRates = {
     "ZMW": 22.50464,
     "ZWL": 322
   }
-}
+};
 
 const stubCurrencies = {
   "AED": "United Arab Emirates Dirham",
@@ -366,20 +366,26 @@ const stubCurrencies = {
   "ZAR": "South African Rand",
   "ZMW": "Zambian Kwacha",
   "ZWL": "Zimbabwean Dollar"
-}
+};
 
 export class CurrencyRatesProvider {
+  static useMocked = false;
+
   static async getRates(): Promise<CurrencyRates> {
-    //const response = await fetch(`${API_URL}/latest.json?app_id=${APP_ID}`)
-    //const rates = await response.json();
-    //return rates as CurrencyRates
-    return stubRates as CurrencyRates
+    if (CurrencyRatesProvider.useMocked) {
+      return stubRates as CurrencyRates;
+    }
+    const response = await fetch(`${API_URL}/latest.json?app_id=${APP_ID}`)
+    const rates = await response.json();
+    return rates as CurrencyRates
   }
 
   static async getCurrencies(): Promise<CurrenciesMap> {
-    //const response = await fetch(`${API_URL}/latest.json?app_id=${APP_ID}`)
-    //const currencies = await response.json();
-    //return currencies as CurrenciesMap
-    return stubCurrencies as CurrenciesMap
+    if (CurrencyRatesProvider.useMocked) {
+      return stubCurrencies as CurrenciesMap;
+    }
+    const response = await fetch(`${API_URL}/latest.json?app_id=${APP_ID}`)
+    const currencies = await response.json();
+    return currencies as CurrenciesMap
   }
 }

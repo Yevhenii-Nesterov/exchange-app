@@ -47,6 +47,11 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "testMatch": [
+      "<rootDir>/src/__tests__/**/*.{test,spec}.{js,jsx,ts,tsx}"
+    ]
+  },
   "devDependencies": {
     "create-react-app": "^4.0.3"
   }
