@@ -4,10 +4,8 @@ import connector, {PropsFromState} from './exchange/exchange-store-connector';
 import {currencyCode} from "../models/BankAccount";
 
 import styles from './exchange/exchange.module.scss';
-import cx from 'classnames';
-import {CurrencySelector} from "./exchange/CurrencySelector";
-import {AmountInput} from "./exchange/AmountInput";
-import {getCurrencySign, getExchangeRate} from "../modules/utils";
+import {CurrencySection} from "./exchange/CurrencySection";
+import {getExchangeRate} from "../modules/utils";
 
 interface ExchangeProps extends PropsFromState {
   ratesUpdateIntervalSec: number
@@ -73,107 +71,39 @@ export class Exchange extends PureComponent<ExchangeProps, ExchangeState> {
     });
   };
 
-  BalanceField = (props: { account: string, 'data-testid'?: string }) => {
-    const {account, 'data-testid': testId} = props;
-    const {balances} = this.props;
-    let content = '';
-    if (balances.loading) {
-      content = 'Loading balance...';
-    } else {
-      const amount = balances.balances?.[account];
-      if (amount !== undefined) {
-        content = `You have ${getCurrencySign(account)}${amount.toFixed(2)}`;
-      }
-    }
-    return (<div className={styles.balanceField} data-testid={testId}>
-      {content}
-    </div>);
-  };
-
-  ExchangeRateField = () => {
-    const {fromCurrency, toCurrency} = this.state;
-    const fromSign = getCurrencySign(fromCurrency);
-    const toSign = getCurrencySign(toCurrency);
-    const {rates} = this.props;
-
-    let content = rates.error ? rates.error : 'Loading rates...';
-
-    if (rates.rates && !rates.error) {
-      const rate = getExchangeRate(rates.rates!, this.state.fromCurrency, this.state.toCurrency);
-      content = `${fromSign}1 = ${toSign}${rate.toFixed(5)}`;
-    }
-
+  ToSection = () => {
+    const {balances, rates} = this.props;
+    const {fromCurrency, toCurrency, toAmount} = this.state;
     return (
-      <div className={styles.rateField} data-testid="exchange-rate">
-        {content}
-      </div>
+      <CurrencySection
+        amount={toAmount}
+        onAmountChange={(value) => this.onAmountChange(value, 'toAmount')}
+        rates={rates}
+        fromCurrency={fromCurrency}
+        toCurrency={toCurrency}
+        balances={balances}
+        onCurrencyChange={(value) => this.onCurrencyChange(value, 'toCurrency')}
+        hasExchangeRate={true}
+        type={"to"}
+      />
     );
   };
 
   FromSection = () => {
-    const {BalanceField} = this;
-    const {balances} = this.props;
-    const {fromCurrency, toCurrency} = this.state;
+    const {balances, rates} = this.props;
+    const {fromCurrency, toCurrency, fromAmount} = this.state;
     return (
-      <section className={cx(styles.currencySection, styles.from)}>
-
-        <div className={styles.leftCol}>
-
-          <CurrencySelector
-            data-testid="currency-from"
-            selected={fromCurrency}
-            codes={Object.keys(balances.balances) as currencyCode[]}
-            unavailable={[toCurrency]}
-            onSelect={(code) => this.onCurrencyChange(code, "fromCurrency")}
-          />
-
-          <BalanceField data-testid="balance-from" account={fromCurrency}/>
-        </div>
-
-        <div className={styles.rightCol}>
-          <AmountInput
-            data-testid="amount-from"
-            amount={this.state.fromAmount}
-            onAmountChange={(value) => this.onAmountChange(value, 'fromAmount')}
-            sign="-"
-          />
-        </div>
-
-      </section>
-    );
-  };
-
-  ToSection = () => {
-    const {ExchangeRateField, BalanceField} = this;
-    const {balances} = this.props;
-    const {fromCurrency, toCurrency} = this.state;
-    return (
-      <section className={cx(styles.currencySection, styles.to)}>
-        <div className={styles.leftCol}>
-
-          <CurrencySelector
-            data-testid="currency-to"
-            selected={toCurrency}
-            codes={Object.keys(balances.balances) as currencyCode[]}
-            unavailable={[fromCurrency]}
-            onSelect={(code) => this.onCurrencyChange(code, "toCurrency")}
-          />
-
-          <BalanceField data-testid="balance-to" account={toCurrency}/>
-        </div>
-
-        <div className={styles.rightCol}>
-          <AmountInput
-            data-testid="amount-to"
-            amount={this.state.toAmount}
-            onAmountChange={(value) => this.onAmountChange(value, 'toAmount')}
-            sign="+"
-          />
-          <ExchangeRateField data-testid="exchange-rate"/>
-        </div>
-
-
-      </section>
+      <CurrencySection
+        amount={fromAmount}
+        onAmountChange={(value) => this.onAmountChange(value, 'fromAmount')}
+        rates={rates}
+        fromCurrency={fromCurrency}
+        toCurrency={toCurrency}
+        balances={balances}
+        onCurrencyChange={(value) => this.onCurrencyChange(value, 'fromCurrency')}
+        hasExchangeRate={false}
+        type={"from"}
+      />
     );
   };
 

@@ -3,7 +3,6 @@ import preloadedState from './initial-state';
 import {combineReducers} from 'redux';
 import {connectRouter, routerMiddleware} from 'connected-react-router';
 import {createBrowserHistory, History} from 'history';
-// import logger from 'redux-logger'
 import thunk from 'redux-thunk';
 import ratesReducer from '../modules/rates';
 import balancesReducer from '../modules/balances';
@@ -22,7 +21,7 @@ const store = configureStore({
   reducer: rootReducer,
   preloadedState,
   devTools: true,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(routerMiddleware(history), thunk/*, logger*/)
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(routerMiddleware(history), thunk)
 });
 
 export type AppDispatch = typeof store.dispatch;
