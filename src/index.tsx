@@ -8,6 +8,7 @@ import {Redirect, Route, Switch} from 'react-router-dom';
 import './index.scss';
 
 import ExchangePage from './pages/Exchange';
+import TransactionList from "./pages/TransactionList";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -15,7 +16,8 @@ ReactDOM.render(
       <ConnectedRouter history={history}>
         <Switch>
           <Route path="/exchange" render={(props) => <ExchangePage {...props} ratesUpdateIntervalSec={10}/>}/>
-          <Redirect to="/exchange"/>
+          <Route path="/transactions" component={TransactionList}/>
+          <Redirect to="/transactions"/>
         </Switch>
       </ConnectedRouter>
     </Provider>

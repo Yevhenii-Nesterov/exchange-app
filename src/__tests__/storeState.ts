@@ -372,6 +372,22 @@ const state = {
     },
     loading: false,
     error: null
+  },
+  transactions: {
+    transactions: [
+      {
+        id: '2a1492b6-badd-45eb-b9f0-6b8673d6310b',
+        currency: 'EUR',
+        amount: 10.01
+      },
+      {
+        id: 'bc9d9fac-e64a-4b09-bb83-01344fda0772',
+        currency: 'USD',
+        amount: 8.99
+      },
+    ],
+    error: null,
+    loading: false
   }
 };
 

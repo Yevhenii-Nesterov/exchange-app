@@ -6,13 +6,15 @@ import {createBrowserHistory, History} from 'history';
 import thunk from 'redux-thunk';
 import ratesReducer from '../modules/rates';
 import balancesReducer from '../modules/balances';
+import transactionsReducer from '../modules/transactions';
 
 export const history = createBrowserHistory();
 
 const createRootReducer = (history: History<unknown>) => combineReducers({
   router: connectRouter(history),
   rates: ratesReducer,
-  balances: balancesReducer
+  balances: balancesReducer,
+  transactions: transactionsReducer,
 });
 
 export const rootReducer = createRootReducer(history);
