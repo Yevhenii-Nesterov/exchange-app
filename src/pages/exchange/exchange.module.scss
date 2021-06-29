@@ -135,3 +135,16 @@
     font-size: 1em;
   }
 }
+
+.footer {
+  padding: 0.5em;
+  color: white;
+  display: flex;
+  justify-content: center;
+  a {
+    color: inherit;
+  }
+  a:visited {
+    color: inherit;
+  }
+}

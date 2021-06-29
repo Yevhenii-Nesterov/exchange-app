@@ -2,11 +2,12 @@ import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
 import {Provider} from 'react-redux';
-import {rootReducer, RootState} from '../../store/';
+import {history, rootReducer, RootState} from '../../store/';
 import ExchangeConnected, {Exchange} from '../../pages/Exchange';
 import {configureStore} from "@reduxjs/toolkit";
 import mockedState from "../storeState";
 import {CurrencyRatesProvider} from "../../models/CurrencyRatesProvider";
+import {ConnectedRouter} from 'connected-react-router';
 
 describe('Exchange page component tests', () => {
   const loadBalances = jest.fn();
@@ -19,14 +20,24 @@ describe('Exchange page component tests', () => {
   });
 
   const createComponent = () => {
-    const ExchangeComponent = <Exchange
-      ratesUpdateIntervalSec={500}
-      rates={mockedState.rates}
-      balances={mockedState.balances}
-      loadBalances={loadBalances}
-      makeTransfer={makeTransfer}
-      loadRates={loadRates}
-    />;
+    const store = configureStore({
+      reducer: rootReducer,
+      preloadedState: mockedState as unknown as RootState,
+    });
+
+    const ExchangeComponent =  <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <Exchange
+          ratesUpdateIntervalSec={500}
+          rates={mockedState.rates}
+          balances={mockedState.balances}
+          loadBalances={loadBalances}
+          makeTransfer={makeTransfer}
+          loadRates={loadRates}
+        />
+      </ConnectedRouter>
+    </Provider>;
+
     const utils = render(ExchangeComponent);
 
     const currencyFromEl = utils.getByTestId("currency-from");
@@ -62,7 +73,9 @@ describe('Exchange page component tests', () => {
 
     const utils = render(
       <Provider store={store}>
-        <ExchangeConnected ratesUpdateIntervalSec={500}/>
+        <ConnectedRouter history={history}>
+          <ExchangeConnected ratesUpdateIntervalSec={500}/>
+        </ConnectedRouter>
       </Provider>
     );
 

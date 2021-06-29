@@ -2,10 +2,11 @@ import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 import {fireEvent, render, waitForElementToBeRemoved, wait} from '@testing-library/react';
 import {Provider} from 'react-redux';
-import {rootReducer, RootState} from '../../store/';
+import {history, rootReducer, RootState} from '../../store/';
 import {configureStore} from "@reduxjs/toolkit";
 import mockedState from "../storeState";
 import TransactionList from "../../pages/TransactionList";
+import {ConnectedRouter} from 'connected-react-router';
 
 describe('TransactionList page component tests', () => {
 
@@ -20,7 +21,9 @@ describe('TransactionList page component tests', () => {
 
     const utils = render(
       <Provider store={store}>
-        <TransactionList/>
+        <ConnectedRouter history={history}>
+          <TransactionList/>
+        </ConnectedRouter>
       </Provider>
     );
 

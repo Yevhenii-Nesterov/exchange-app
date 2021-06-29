@@ -17,7 +17,7 @@ ReactDOM.render(
         <Switch>
           <Route path="/exchange" render={(props) => <ExchangePage {...props} ratesUpdateIntervalSec={10}/>}/>
           <Route path="/transactions" component={TransactionList}/>
-          <Redirect to="/transactions"/>
+          <Redirect to="/exchange"/>
         </Switch>
       </ConnectedRouter>
     </Provider>

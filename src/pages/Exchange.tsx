@@ -6,6 +6,7 @@ import {currencyCode} from "../models/BankAccount";
 import styles from './exchange/exchange.module.scss';
 import {CurrencySection} from "./exchange/CurrencySection";
 import {getExchangeRate} from "../modules/utils";
+import {Link} from "react-router-dom";
 
 interface ExchangeProps extends PropsFromState {
   ratesUpdateIntervalSec: number
@@ -134,6 +135,9 @@ export class Exchange extends PureComponent<ExchangeProps, ExchangeState> {
         <div className={styles.buttonsRow}>
           <button data-testid="exchange-btn" onClick={this.exchangeClick}>Exchange</button>
           <div className={styles.operationError}>{error ?? ''}</div>
+        </div>
+        <div className={styles.footer}>
+          <Link to={'/transactions'}>View transactions</Link>
         </div>
       </div>
     );

@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {getTransactions} from "../modules/transactions";
 import {useAppDispatch, useAppSelector} from "../store/hooks";
+import {Link} from 'react-router-dom';
 
 const TransactionList: React.FC<{}> = () => {
   const dispatch = useAppDispatch() as (action: any) => Promise<any>;
@@ -25,6 +26,7 @@ const TransactionList: React.FC<{}> = () => {
 
       <div>
         <button onClick={() => dispatch(getTransactions(true))}>Refresh</button>
+        <Link to={'/exchange'}>Go to exchange</Link>
       </div>
     </div>
   );
